@@ -64,7 +64,7 @@ export const Register = async (req, res) => {
   try {
     const { username, password, name, role } = req.body;
     const hashedPassword = await argon2.hash(password);
-    const newUser = await prisma.user.create({
+    const user = await prisma.user.create({
       data: {
         username: username,
         password: hashedPassword,
@@ -72,13 +72,7 @@ export const Register = async (req, res) => {
         role: role,
       },
     });
-    const token = jwt.sign(
-      { id: newUser.id, username: newUser.username },
-      process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "1h" }
-    );
-
-    res.json({ token });
+    res.json({ user });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
