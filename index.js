@@ -19,6 +19,10 @@ app.use(HangoutRoute);
 app.use(KulinerRoute);
 app.use(WisataRoute);
 
+app.get("/", (req, res) => {
+  res.send("Backend is running.");
+});
+
 
 const port = process.env.PORT || 5000;
 
