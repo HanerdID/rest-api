@@ -17,5 +17,40 @@ datasource db {
 model User {
   id Int @id @default(autoincrement())
   name String
-  email String
+  username String @unique
+  password String
+  role    Role     @default(USER)
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Hangout {
+  id Int @id @default(autoincrement())
+  name String
+  description String
+  location String
+  image String
+}
+model Wisata {
+  id Int @id @default(autoincrement())
+  name String
+  description String
+  location String
+  image String
+}
+model Kuliner {
+  id Int @id @default(autoincrement())
+  name String
+  description String
+  location String
+  image String
+}
+
+model Token {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  createdAt DateTime @default(now())
 }
