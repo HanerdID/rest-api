@@ -53,7 +53,13 @@ export const createKuliner = async (req, res) => {
     const filePath = `public/uploads/${fileName}`;
 
     // Save the file to the public/uploads directory
-    await fs.promises.writeFile(filePath, await file.buffer());
+    await fs.promises.mkdir(path.join(process.cwd(), "public", "uploads"), {
+      recursive: true,
+    });
+    await fs.promises.writeFile(
+      path.join(process.cwd(), filePath),
+      file.buffer
+    );
 
     const kuliner = await prisma.kuliner.create({
       data: {
@@ -68,6 +74,8 @@ export const createKuliner = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
 
 export const updateKuliner = async (req, res) => {
   try {
