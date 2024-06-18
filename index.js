@@ -29,7 +29,7 @@ app.use(KulinerRoute);
 app.use(WisataRoute);
 
 const upload = multer({ dest: "uploads/" });
-app.use("/uploads", express.static(path.join(process.cwd(), "public/uploads")));
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 app.get("/", (req, res) => {
   res.send("Backend is running.");
