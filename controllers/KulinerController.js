@@ -32,33 +32,15 @@ export const getKulinerById = async (req, res) => {
   }
 };
 
-
 export const createKuliner = async (req, res) => {
-  try {
-    const { name, description, location } = req.body;
-    const { file } = req;
-
-    if (!file) {
-      return res.status(400).json({ error: "No image file provided" });
-    }
-
-    const allowedExtensions = [".jpg", ".jpeg", ".png"];
-    const fileExtension = path.extname(file.originalname);
-
-    if (!allowedExtensions.includes(fileExtension.toLowerCase())) {
-      // Hapus file yang tidak diizinkan
-      fs.unlinkSync(file.path);
-      return res.status(400).json({ error: "Invalid image file format" });
-    }
-
-    const imagePath = path.join("uploads", file.filename);
-
+try {
+const { name, description, location, image } = req.body;
     const kuliner = await prisma.kuliner.create({
       data: {
         name: name,
         description: description,
         location: location,
-        image: imagePath,
+        image: image,
       },
     });
     res.status(201).json(kuliner);
@@ -66,6 +48,41 @@ export const createKuliner = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+// export const createKuliner = async (req, res) => {
+//   try {
+//     const { name, description, location } = req.body;
+//     const { file } = req;
+
+//     if (!file) {
+//       return res.status(400).json({ error: "No image file provided" });
+//     }
+
+//     const allowedExtensions = [".jpg", ".jpeg", ".png"];
+//     const fileExtension = path.extname(file.originalname);
+
+//     if (!allowedExtensions.includes(fileExtension.toLowerCase())) {
+//       // Hapus file yang tidak diizinkan
+//       fs.unlinkSync(file.path);
+//       return res.status(400).json({ error: "Invalid image file format" });
+//     }
+
+//     const imagePath = path.join("uploads", file.filename);
+
+//     const kuliner = await prisma.kuliner.create({
+//       data: {
+//         name: name,
+//         description: description,
+//         location: location,
+//         image: imagePath,
+//       },
+//     });
+//     res.status(201).json(kuliner);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
 
 export const updateKuliner = async (req, res) => {
   try {
