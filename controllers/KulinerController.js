@@ -37,6 +37,7 @@ export const createKuliner = async (req, res) => {
   try {
     const { name, description, location } = req.body;
     const { file } = req;
+    console.log("Received file:", file);
 
     if (!file) {
       return res.status(400).json({ error: "No image file provided" });
@@ -63,6 +64,7 @@ export const createKuliner = async (req, res) => {
     });
     res.status(201).json(kuliner);
   } catch (error) {
+    console.error("Error creating kuliner:", error);
     res.status(500).json({ error: error.message });
   }
 };
