@@ -25,7 +25,7 @@ export const getKulinerById = async (req, res) => {
       return res.status(404).json({ error: "Kuliner not found" });
     }
 
-    kuliner.image = `http://localhost:4000/${kuliner.image}`;
+    kuliner.image = `${process.env.BACKEND_URL}/${kuliner.image}`;
     res.status(200).json(kuliner);
   } catch (error) {
     res.status(500).json({ error: error.message });

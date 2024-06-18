@@ -26,7 +26,7 @@ export const getHangoutById = async (req, res) => {
       return res.status(404).json({ error: "Hangout not found" });
     }
 
-    hangout.image = `http://localhost:4000/${hangout.image}`;
+    hangout.image = `${process.env.BACKEND_URL}/${hangout.image}`;
     res.status(200).json(hangout);
   } catch (error) {
     res.status(500).json({ error: error.message });

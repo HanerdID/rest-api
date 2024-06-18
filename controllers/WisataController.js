@@ -27,7 +27,7 @@ export const getWisataById = async (req, res) => {
       return res.status(404).json({ error: "Wisata not found" });
     }
 
-    wisata.image = `http://localhost:4000/${wisata.image}`;
+    wisata.image = `${process.env.BACKEND_URL}/${wisata.image}`;
     res.status(200).json(wisata);
   } catch (error) {
     res.status(500).json({ error: error.message });
