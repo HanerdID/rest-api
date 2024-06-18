@@ -16,11 +16,11 @@ const app = express();
 
 app.use(
   cors({
-    credential: true,
-    origin: process.env.APP_PORT,
-    // origin: "http://localhost:9898",
+    credentials: true,
+    origin: process.env.APP_PORT || "http://localhost:3000",
   })
 );
+
 app.use(express.json());
 app.use(UserRoute);
 app.use(AuthRoute);
