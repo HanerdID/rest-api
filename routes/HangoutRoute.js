@@ -1,14 +1,13 @@
 import express from "express";
-
+import fileUpload from "../middleware/fileUpload.js";
 import {createHangout, getHangout, getHangoutById, updateHangout, deleteHangout} from "../controllers/HangoutController.js";
-import {isAuth, isAdmin} from "../middleware/Auth.js";
 
 const router = express.Router();
 
-router.get("/hangout", isAuth, getHangout);
-router.get("/hangout/:id", isAuth, getHangoutById);
-router.post("/hangout", isAuth, isAdmin, createHangout);
-router.put("/hangout/:id", isAuth, isAdmin, updateHangout);
-router.delete("/hangout/:id", isAuth, isAdmin, deleteHangout);
+router.get("/hangout", getHangout);
+router.get("/hangout/:id", getHangoutById);
+router.post("/hangout", fileUpload, createHangout);
+router.put("/hangout/:id", fileUpload, updateHangout);
+router.delete("/hangout/:id", deleteHangout);
 
 export default router;

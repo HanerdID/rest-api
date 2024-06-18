@@ -1,14 +1,14 @@
 import express from "express";
-
+import fileUpload from "../middleware/fileUpload.js";
 import {createKuliner, getKuliner, getKulinerById, updateKuliner, deleteKuliner} from "../controllers/KulinerController.js";
-import {isAuth, isAdmin} from "../middleware/Auth.js";
+
 
 const router = express.Router();
 
-router.get("/kuliner", isAuth, getKuliner);
-router.get("/kuliner/:id", isAuth, getKulinerById);
-router.post("/kuliner", isAuth, isAdmin, createKuliner);
-router.put("/kuliner/:id", isAuth, isAdmin, updateKuliner);
-router.delete("/kuliner/:id", isAuth, isAdmin, deleteKuliner);
+router.get("/kuliner", getKuliner);
+router.get("/kuliner/:id", getKulinerById);
+router.post("/kuliner", fileUpload, createKuliner);
+router.put("/kuliner/:id", fileUpload, updateKuliner);
+router.delete("/kuliner/:id", deleteKuliner);
 
 export default router;

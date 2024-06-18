@@ -1,6 +1,9 @@
 import cors from "cors";
 import express from "express";
 import dotenv from "dotenv";
+import path from "path";
+import multer from "multer";
+
 import UserRoute from "./routes/UserRoute.js";
 import AuthRoute from "./routes/AuthRoute.js";
 import HangoutRoute from "./routes/HangoutRoute.js";
@@ -13,8 +16,9 @@ const app = express();
 
 app.use(
   cors({
-    credentials: true,
+    credential: true,
     origin: process.env.APP_PORT,
+    // origin: "http://localhost:9898",
   })
 );
 app.use(express.json());
@@ -23,6 +27,9 @@ app.use(AuthRoute);
 app.use(HangoutRoute);
 app.use(KulinerRoute);
 app.use(WisataRoute);
+
+const upload = multer({ dest: "uploads/" });
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 app.get("/", (req, res) => {
   res.send("Backend is running.");

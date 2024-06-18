@@ -1,4 +1,6 @@
 import { PrismaClient } from "@prisma/client";
+import path from "path";
+import fs from "fs";
 
 const prisma = new PrismaClient();
 
@@ -19,6 +21,13 @@ export const getWisataById = async (req, res) => {
         id: Number(id),
       },
     });
+    
+
+    if (!wisata) {
+      return res.status(404).json({ error: "Wisata not found" });
+    }
+
+    wisata.image = `http://localhost:4000/${wisata.image}`;
     res.status(200).json(wisata);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -27,13 +36,30 @@ export const getWisataById = async (req, res) => {
 
 export const createWisata = async (req, res) => {
   try {
-    const { name, description, location, image } = req.body;
+    const { name, description, location } = req.body;
+    const { file } = req;
+
+    if (!file) {
+      return res.status(400).json({ error: "No image file provided" });
+    }
+
+    const allowedExtensions = [".jpg", ".jpeg", ".png"];
+    const fileExtension = path.extname(file.originalname);
+
+    if (!allowedExtensions.includes(fileExtension.toLowerCase())) {
+      // Hapus file yang tidak diizinkan
+      fs.unlinkSync(file.path);
+      return res.status(400).json({ error: "Invalid image file format" });
+    }
+
+    const imagePath = path.join("uploads", file.filename);
+
     const wisata = await prisma.wisata.create({
       data: {
         name: name,
         description: description,
         location: location,
-        image: image,
+        image: imagePath,
       },
     });
     res.status(201).json(wisata);
@@ -45,7 +71,22 @@ export const createWisata = async (req, res) => {
 export const updateWisata = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, location, image } = req.body;
+    const { name, description, location } = req.body;
+    const file = req.file;
+
+    if (file) {
+      const allowedExtensions = [".jpg", ".jpeg", ".png"];
+      const fileExtension = path.extname(file.originalname);
+
+      if (!allowedExtensions.includes(fileExtension.toLowerCase())) {
+        // Hapus file yang tidak diizinkan
+        fs.unlinkSync(file.path);
+        return res.status(400).json({ error: "Invalid image file format" });
+      }
+    }
+
+    const imagePath = file ? path.join("uploads", file.filename) : undefined;
+
     const wisata = await prisma.wisata.update({
       where: {
         id: Number(id),
@@ -54,7 +95,7 @@ export const updateWisata = async (req, res) => {
         name: name,
         description: description,
         location: location,
-        image: image,
+        image: imagePath,
       },
     });
     res.status(200).json(wisata);

@@ -49,16 +49,20 @@ export const Login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: user.id, username: user.username },
+      { id: user.id, username: user.username, role: user.role }, // Sertakan role di payload token
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "1h" }
     );
 
-    res.json({ token });
+    res.json({
+      token,
+      user: { id: user.id, username: user.username, role: user.role },
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 export const Register = async (req, res) => {
   try {
