@@ -37,7 +37,6 @@ export const createKuliner = async (req, res) => {
   try {
     const { name, description, location } = req.body;
     const { file } = req;
-    console.log("Received file:", file);
 
     if (!file) {
       return res.status(400).json({ error: "No image file provided" });
@@ -47,24 +46,25 @@ export const createKuliner = async (req, res) => {
     const fileExtension = path.extname(file.originalname);
 
     if (!allowedExtensions.includes(fileExtension.toLowerCase())) {
-      // Hapus file yang tidak diizinkan
-      fs.unlinkSync(file.path);
       return res.status(400).json({ error: "Invalid image file format" });
     }
 
-    const imagePath = path.join("uploads", file.filename);
+    const fileName = `${Date.now()}-${file.originalname}`;
+    const filePath = `public/uploads/${fileName}`;
+
+    // Save the file to the public/uploads directory
+    await fs.promises.writeFile(filePath, await file.buffer());
 
     const kuliner = await prisma.kuliner.create({
       data: {
         name: name,
         description: description,
         location: location,
-        image: imagePath,
+        image: `uploads/${fileName}`,
       },
     });
     res.status(201).json(kuliner);
   } catch (error) {
-    console.error("Error creating kuliner:", error);
     res.status(500).json({ error: error.message });
   }
 };
